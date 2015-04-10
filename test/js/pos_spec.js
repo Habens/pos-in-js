@@ -1,35 +1,22 @@
 
-var Item = require('../../src/js/item.js');
+var Parser = require('../../src/js/parser.js');
 var Pos = require('../../src/js/pos.js');
-var Order = require('../../src/js/order.js');
 
-var orderList = [];
-var pos;
+var parser = new Parser();
 
-describe("Pos test", function(){
-	beforeEach(function(){
-		var item = new Item(1, 10);
-		var order = new Order(item, 1);
-		var orderList = [];
-		orderList.push(order);
+var idPriceMap = parser.read("src/resources/item_list.txt").parseWithToken(":").getMap();
 
-		pos = new Pos();
+describe("Parser test", function() {
 
-		pos.checkout(orderList);
-	});
+	var pos = new Pos(idPriceMap);
 
-	it('should get subtotal list', function(){
-		var subtotalList = pos.getSubtotalList();
+	it('str checkout', function() {
+		var orderMap = [{key:'ITEM00001', value:1}];
 
-		expect(subtotalList.length).toBe(1);
-		expect(subtotalList[0].getId()).toBe(1);
-		expect(subtotalList[0].getNum()).toBe(1);
-		expect(subtotalList[0].getCost()).toBe(10);
-	});
+		var result = pos.checkout(orderMap).getResult();
 
-	it('should get total cost', function(){
-		var total = pos.getTotal();
+		/*expect(result.getTotal()).toBe(100);*/
 
-		expect(pos.getTotal()).toBe(10);
 	});
 });
+

@@ -1,53 +1,42 @@
 
-function Subtotal(id, num, cost){
-	var id = id;
-	var num = num;
-	var cost = cost;
+var Result = require('./result.js');
+var Subtotal = require('./subtotal.js');
 
-	this.getId = function() {
-		return id;
-	}
-
-	this.getNum = function() {
-		return num;
-	}
-
-	this.getCost = function() {
-		return cost;
-	}
-};
-
-function Pos() {
-	var total = 0;
-	var subtotalList = [];
-
+function Pos(idPriceMap, promotionList) {
+	var idPriceMap = idPriceMap;
+	var promotionList = promotionList;
+	
+	var result = {};
 	var reset = function() {
-		total = 0;
-		subtotalList = [];
+		result = {};
+
 	}
 
-	this.checkout = function(orderList) {
-		
+	this.getResult = function() {
+		return result;
+	}
+
+	this.checkout = function(orderMap) {
+
 		reset();
-
-		for (var i in orderList) {
-			var id = orderList[i].getItem().getId();
-			var num = orderList[i].getNum();
-			var cost = orderList[i].getItem().cost(num);
+		var total = 0;
+		var subtotalList = [];
+		for (var i in orderMap) {
+			var num = orderMap[i];
+			var price = idPriceMap[i];
+			var cost = price*num;
 			
-			var subtotal = new Subtotal(id, num, cost);
-
-			subtotalList.push(subtotal);
+			for (var j in promotionList) {
+				price = cost/num;
+				if (promotionList[j].contains(i)) {
+					cost = promotionList[j].calculate(i, price, num);
+				}
+			}
+			subtotalList.push(new Subtotal(i, num, cost));
 			total += cost;
 		}
-	}
-
-	this.getSubtotalList = function() {
-		return subtotalList;
-	}
-	
-	this.getTotal = function() {
-		return total;
+		result = new Result(subtotalList, total);
+		return this;
 	}
 }
 

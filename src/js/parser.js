@@ -10,7 +10,7 @@ function Parser() {
 
 		if (array.length > 2) {
 			console.log("str error");
-			exit(0);
+			process.exit(1);
 		}
 
 		return {
@@ -27,9 +27,12 @@ function Parser() {
 		return strList;
 	};
 
-	this.parse = function(token) {
+	this.parseWithToken = function(token) {
 		map = {};
 		for (var i in strList) {
+			if ("" == strList[i].valueOf()) {
+				continue;
+			}
 			var kv = convert(strList[i], token);
 			if (kv.key in map) {
 				map[kv.key] += kv.value;
@@ -37,12 +40,11 @@ function Parser() {
 				map[kv.key] = kv.value;
 			}
 		}
-		return map;
+		return this;
 	};
 
 	this.read = function(fileName) {
 		strList = fs.readFileSync(fileName).toString().split("\n");
-		console.log(strList);
 		return this;
 	};
 }
