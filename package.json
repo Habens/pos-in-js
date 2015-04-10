@@ -1,0 +1,8 @@
+{
+	"name": "pos-in-js",
+	"author": "Habens",
+  	"main": "",
+  	"dependencies": {
+		"jasmine-node": "~2.0.0"
+      	}
+}
