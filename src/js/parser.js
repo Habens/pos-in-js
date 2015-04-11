@@ -30,9 +30,6 @@ function Parser() {
 	this.parseWithToken = function(token) {
 		map = {};
 		for (var i in strList) {
-			if ("" == strList[i].valueOf()) {
-				continue;
-			}
 			var kv = convert(strList[i], token);
 			if (kv.key in map) {
 				map[kv.key] += kv.value;
@@ -44,7 +41,10 @@ function Parser() {
 	};
 
 	this.read = function(fileName) {
-		strList = fs.readFileSync(fileName).toString().split("\n");
+		strList = fs.readFileSync(fileName).toString().split("\n")
+			.filter(function(item) {
+				return !!item
+			});
 		return this;
 	};
 }

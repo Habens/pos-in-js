@@ -27,8 +27,8 @@ function Pos(idPriceMap, promotionList) {
 			var cost = price*num;
 			
 			for (var j in promotionList) {
-				price = cost/num;
 				if (promotionList[j].contains(i)) {
+					price = cost/num;
 					cost = promotionList[j].calculate(i, price, num);
 				}
 			}
